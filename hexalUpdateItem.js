@@ -1,5 +1,5 @@
-'use strict';
-const AWS = require('aws-sdk');
+"use strict";
+const AWS = require("aws-sdk");
 
 exports.handler = async (event, context) => {
   const documentClient = new AWS.DynamoDB.DocumentClient();
@@ -12,20 +12,20 @@ exports.handler = async (event, context) => {
   const params = {
     TableName: "Products",
     Key: {
-      id: id
+      id: id,
     },
     UpdateExpression: "set productname = :n",
     ExpressionAttributeValues: {
-      ":n": productname
+      ":n": productname,
     },
-    ReturnValues: "UPDATED_NEW"
+    ReturnValues: "UPDATED_NEW",
   };
 
   try {
     const data = await documentClient.update(params).promise();
     responseBody = JSON.stringify(data);
     statusCode = 204;
-  } catch(err) {
+  } catch (err) {
     responseBody = `Unable to update product: ${err}`;
     statusCode = 403;
   }
@@ -33,9 +33,11 @@ exports.handler = async (event, context) => {
   const response = {
     statusCode: statusCode,
     headers: {
-      "Content-Type": "application/json"
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,PATCH",
     },
-    body: responseBody
+    body: responseBody,
   };
 
   return response;

@@ -12,16 +12,16 @@ exports.handler = async (event, context) => {
   const params = {
     TableName: "Products",
     Key: {
-      id: id,
+      id,
     },
   };
 
   try {
-    const data = await documentClient.delete(params).promise();
+    const data = await documentClient.get(params).promise();
     responseBody = JSON.stringify(data);
-    statusCode = 204;
+    statusCode = 200;
   } catch (err) {
-    responseBody = `Unable to delete product: ${err}`;
+    responseBody = `Unable to get products: ${err}`;
     statusCode = 403;
   }
 
@@ -30,7 +30,7 @@ exports.handler = async (event, context) => {
     headers: {
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,DELETE",
+      "Access-Control-Allow-Methods": "OPTIONS,GET",
     },
     body: responseBody,
   };
